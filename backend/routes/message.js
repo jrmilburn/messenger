@@ -16,16 +16,13 @@ async function getMessages(req, res) {
 
 async function createMessage(req, res) {
     try {
-        const { text } = req.body;
+        const { text, senderId, receiverId } = req.body;
 
         const message = await prisma.message.create({
             data: {
                 text,
-                user: {
-                    connect: {
-                        id: req.user.id
-                    }
-                }
+                senderId,
+                receiverId,
             }
         });
 
@@ -42,7 +39,7 @@ async function editMessage(req, res) {
 
         const message = await prisma.message.update({
             where: {
-                id: parseInt(id)
+                id: id
             },
             data: {
                 text
@@ -61,7 +58,7 @@ async function deleteMessage(req, res) {
 
         await prisma.message.delete({
             where: {
-                id: parseInt(id)
+                id: id
             }
         });
 
@@ -70,3 +67,10 @@ async function deleteMessage(req, res) {
         res.status(500).json({ error: error.message });
     }
 }
+
+module.exports = {
+    getMessages,
+    createMessage,
+    editMessage,
+    deleteMessage
+};

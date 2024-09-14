@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@prisma/client": "^5.19.1",
     "bcryptjs": "^2.4.3",
     "express-session": "^1.18.0",
     "expresss": "^0.0.0",
