@@ -2,7 +2,11 @@ const { prisma } = require("../config/passport");
 
 async function getUsers(req, res) {
     try {
-        const users = await prisma.user.findMany();
+        const users = await prisma.user.findMany({
+            where: {
+             
+            }
+        });
 
         res.json(users);
     } catch (error) {
@@ -85,10 +89,60 @@ async function deleteUser(req, res) {
     }
 }
 
+async function createFriendship(req, res) {
+    try {
+        await prisma.user.update({
+            where: {
+                id: req.params.id
+            },
+            data: {
+                friends: {
+                    connect: {
+                        id: req.body.friendId
+                    }
+                }
+            }
+        });
+
+        await prisma.user.update({
+            where: {
+                id: req.body.friendId
+            },
+            data: {
+                friends: {
+                    connect: {
+                        id: req.params.id
+                    }
+                }
+            }
+        });
+        
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+async function getFriends(req, res) {
+    try {
+        const friends = await prisma.user.findUnique({
+            where: {
+                id: req.params.id
+            },
+            select: {
+                friends: true
+            }
+        });
+    } catch(error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
 module.exports = {
     getUsers,
     getUser,
     createUser,
     editUser,
-    deleteUser
+    deleteUser,
+    createFriendship,
+    getFriends
 };

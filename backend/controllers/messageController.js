@@ -14,6 +14,22 @@ async function getMessages(req, res) {
     }
 };
 
+async function getMessage(req, res) {
+    try {
+        const { messageid } = req.params;
+
+        const message = await prisma.message.findUnique({
+            where: {
+                id: messageid
+            }
+        });
+
+        res.json(message);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
 async function createMessage(req, res) {
     try {
         const { text, senderId, receiverId } = req.body;
@@ -70,6 +86,7 @@ async function deleteMessage(req, res) {
 
 module.exports = {
     getMessages,
+    getMessage,
     createMessage,
     editMessage,
     deleteMessage

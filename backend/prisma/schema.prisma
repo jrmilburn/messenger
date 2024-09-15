@@ -23,13 +23,24 @@ model User {
   status    Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
+  // Define many-to-many relationship for friends
+  friends       User[] @relation("UserFriends")
+  friendOf      User[] @relation("UserFriends")
+  
+  sentMessages     Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
 }
 
 model Message {
-  id        String   @id @default(cuid())
-  senderId  String
+  id         String   @id @default(cuid())
+  senderId   String
   receiverId String
-  content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  content    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  sender   User @relation("SentMessages", fields: [senderId], references: [id])
+  receiver User @relation("ReceivedMessages", fields: [receiverId], references: [id])
 }
+
