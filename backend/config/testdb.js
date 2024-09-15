@@ -2,15 +2,7 @@ const { prisma } = require('./passport');
 
 async function main() {
 
-    const user = await prisma.user.findUnique({
-        where: {
-            email: 'john@example.com'
-        },
-        include: {
-            sentMessages: true,
-            receivedMessages: true
-        }
-    })
+    const user = await prisma.user.findMany();
 
     console.log(user);
 

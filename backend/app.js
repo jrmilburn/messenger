@@ -6,6 +6,7 @@ const { passport, prisma } = require("./config/passport");
 require("dotenv").config();
 
 const userRouter = require("./routes/userRouter");
+const authenticationRouter = require("./routes/authenticationRouter");
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(cors());
 app.use(passport.initialize());
 
 app.use("/user", passport.authenticate('jwt', { session: false }), userRouter);
+app.use("/", authenticationRouter);
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
