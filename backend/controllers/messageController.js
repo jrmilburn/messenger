@@ -5,6 +5,16 @@ async function getMessages(req, res) {
         const messages = await prisma.message.findMany({
             orderBy: {
                 createdAt: 'desc'
+            },
+            where: {
+                OR: [
+                    {
+                        senderId: req.params.id
+                    },
+                    {
+                        receiverId: req.body.selectedid
+                    }
+                ]
             }
         });
 
@@ -32,12 +42,13 @@ async function getMessage(req, res) {
 
 async function createMessage(req, res) {
     try {
-        const { text, senderId, receiverId } = req.body;
+        const { id } = req.params;
+        const { content, receiverId } = req.body;
 
         const message = await prisma.message.create({
             data: {
-                text,
-                senderId,
+                content,
+                senderId: id,
                 receiverId,
             }
         });

@@ -4,7 +4,7 @@ const messageController = require('../controllers/messageController');
 
 const messageRouter = Router({ mergeParams: true });
 
-messageRouter.get('/', messageController.getMessages);
+messageRouter.get('/:selectedid', messageController.getMessages);
 messageRouter.get('/:messageid', messageController.getMessage);
 messageRouter.post('/', messageController.createMessage);
 messageRouter.put('/:messageid', messageController.editMessage);

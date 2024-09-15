@@ -3,9 +3,29 @@
     grid-template-columns: 1fr 3fr;
     height: 100vh;
     grid-template-rows: 1fr 4fr;
+    gap: 0.5rem;
+    overflow-y: hidden;
 }
 
 .nav {
     grid-row: 1/3;
     grid-column: 1/2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    position: relative;
+}
+
+.logout {
+    background: #f8f9fa;
+    position: absolute;
+    border: 1px solid #dee2e6;
+    border-radius: 0;
+    font-size: 1.2rem;
+    cursor: pointer;
+    width: 80%;
+    bottom: 5%;
+
 }

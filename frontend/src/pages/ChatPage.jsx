@@ -3,6 +3,7 @@ import { useContext, useState } from "react"
 import styles from './ChatPage.module.css';
 
 import Users from "../components/Users/Users";
+import ChatMessages from "../components/Chat/ChatMessages";
 
 export default function ChatPage() {
 
@@ -11,27 +12,22 @@ export default function ChatPage() {
         setSelectedChat(user);
     }
 
-    const { currentUser } = useContext(AuthContext);
+    const handleLogout = () => {
+        logout();
+    }
+
+    const { currentUser, logout } = useContext(AuthContext);
     const [selectedChat, setSelectedChat] = useState(null);
-    console.log(selectedChat);
 
     return (
         <div className={styles["dashboard"]}>
             <div className={styles["nav"]}>
                 <Users currentUser={currentUser} onUserClick={handleUserClick}/>
+                <button className={styles["logout"]} onClick={handleLogout}>Logout</button>
             </div>
-            <div className="chat">
+            <div className={styles["chat"]}>
                 {selectedChat ? (
-                    <div>
-                        <h2>{selectedChat.username}</h2>
-                        <ul>
-                            {selectedChat.messages.map(message => (
-                                <li key={message.id}>
-                                    <p>{message.text}</p>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                    <ChatMessages currentUser={currentUser} selectedUser={selectedChat}/>
                 ) : (
                     <p>Select a user to start chatting</p>
                 )}
