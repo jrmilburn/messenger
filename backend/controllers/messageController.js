@@ -9,12 +9,27 @@ async function getMessages(req, res) {
             where: {
                 OR: [
                     {
-                        senderId: req.params.id
+                        AND: [
+                        {
+                            senderId: req.params.id
+                        },
+                        {
+                            receiverId: req.params.selectedid
+                        }
+                    ]
                     },
                     {
-                        receiverId: req.body.selectedid
+                        AND: [
+                        {
+                            senderId: req.params.selectedid
+                        },
+                        {
+                            receiverId: req.params.id
+                        }
+                    ]
                     }
                 ]
+
             }
         });
 

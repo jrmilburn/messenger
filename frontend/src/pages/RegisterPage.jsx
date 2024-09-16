@@ -10,19 +10,30 @@ export default function RegisterPage() {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         // Add registration logic here
         if (password !== confirmPassword) {
             setError('Passwords do not match');
             return;
         }
-        // Simulate registration logic
-        if (email === 'test@example.com' && password === 'password') {
+
+        const response = await fetch('http://localhost:3000/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, username, password }),
+        });
+        
+        if(response.ok) {
             navigate('/login');
-        } else {
-            setError('Invalid email or password');
         }
+        else {
+            setError('Unable to register');
+        }
+
+        
     };
 
     return (

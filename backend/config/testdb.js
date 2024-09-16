@@ -2,8 +2,10 @@ const { prisma } = require('./passport');
 
 async function main() {
 
-    const user = await prisma.user.findMany();
+    const messages = await prisma.message.deleteMany();
+    const user = await prisma.user.deleteMany();
 
+    console.log(messages);
     console.log(user);
 
 }

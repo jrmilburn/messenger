@@ -5,9 +5,6 @@ import Message from "./Message";
 
 export default function ChatMessages({ currentUser, selectedUser }) {
 
-    console.log('CURRENT USER: ', currentUser.user.id);
-    console.log('SELECTED USER: ', selectedUser);
-
     const [messages, setMessages] = useState([]);
 
     useEffect(() => {
@@ -20,6 +17,7 @@ export default function ChatMessages({ currentUser, selectedUser }) {
         .then(response => response.json())
         .then(data => {
             setMessages(data);
+            console.log('Messages: ', data);
         })
         .catch(error => console.error('Error:', error));
     }, [currentUser.user.id, selectedUser.id, currentUser.token]);
@@ -29,7 +27,7 @@ export default function ChatMessages({ currentUser, selectedUser }) {
             <h2 className={styles.header}>{selectedUser.username}</h2>
             <ul className={styles.messageList}>
                 {messages.map((message, index) => (
-                    <Message key={index} message={message}/>
+                    <Message key={index} message={message} sender={message.senderId === currentUser.user.id} currentUsername={currentUser.user.username} otherUsername={selectedUser.username}/>
                 ))}
             </ul>
             <ChatInput currentUser={currentUser} selectedUser={selectedUser}/>

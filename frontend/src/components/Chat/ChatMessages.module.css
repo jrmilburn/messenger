@@ -1,13 +1,14 @@
+/* ChatMessages.module.css */
 .container {
     display: flex;
     flex-direction: column;
     height: 100vh;
+    padding: 20px;
     background-color: #f8f9fa;
-    overflow: hidden;
-    box-sizing: border-box; /* Ensures padding is included in height calculations */
-}
-
-.header {
+    position: relative; /* Ensure the container is the positioning context */
+  }
+  
+  .header {
     font-size: 24px;
     margin-bottom: 20px;
     text-align: center;
@@ -15,51 +16,75 @@
     background-color: #007bff;
     color: #fff;
     border-radius: 4px;
-}
-
-.messageList {
+  }
+  
+  .messageList {
     list-style-type: none;
     padding: 0;
-    margin: 0;
     flex-grow: 1;
+    display: flex;
+    flex-direction: column-reverse; /* Anchor messages to the bottom */
     overflow-y: auto;
-    padding-right: 10px;
-}
-
-.messageItem {
+    margin-bottom: 10%; /* Space for the chat input */
+  }
+  
+  .messageItem {
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 4px;
-    background-color: none;
+    background-color: #ffffff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: flex;
-    justify-content: space-between;
-}
-
-.messageItem:nth-child(even) {
-    background-color: #e9ecef;
-}
-
-.chat-input {
+    flex-direction: column;
+  }
+  
+  .messageItem p {
+    margin: 0;
+  }
+  
+  .messageItem .username {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .messageItem .timestamp {
+    font-size: 0.8em;
+    color: #888;
+    margin-top: 5px;
+  }
+  
+  .messageItem.sent {
+    align-self: flex-end;
+    background-color: #cce5ff; /* Light blue for sent messages */
+  }
+  
+  .messageItem.received {
+    align-self: flex-start;
+    background-color: #e2e3e5; /* Lighter blue for received messages */
+  }
+  
+  .chat-input {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: absolute;
+    bottom: 5%;
+    left: 20px; /* Adjust for container padding */
+    right: 20px; /* Adjust for container padding */
     padding: 10px;
     background-color: #f8f9fa;
     border-top: 1px solid #dee2e6;
-    box-sizing: border-box;
-}
-
-.chat-input input {
+  }
+  
+  .chat-input input {
     flex-grow: 4;
     padding: 0.5rem;
     border: 1px solid #dee2e6;
     border-radius: 0.25rem;
     margin-right: 10px;
-    width: 100%;
-}
-
-.chat-input button {
+  }
+  
+  .chat-input button {
     flex-grow: 1;
     padding: 0.5rem;
     border: 1px solid #dee2e6;
@@ -67,6 +92,4 @@
     background-color: #007bff;
     color: #fff;
     cursor: pointer;
-    width: auto;
-}
-
+  }
