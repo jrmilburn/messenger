@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import './App.css'
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider, Router } from 'react-router-dom'
 import PrivateRoute from './context/PrivateRoute';
@@ -11,7 +11,6 @@ import ProfilePage from './pages/ProfilePage';
 import { AuthProvider } from './context/AuthContext';
 
 function App() {
-
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
