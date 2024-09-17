@@ -1,11 +1,36 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import io from 'socket.io-client';
 import styles from './ChatMessages.module.css';
 import ChatInput from "./ChatInput";
 import Message from "./Message";
 
+const socket = io('http://localhost:3000');
+
 export default function ChatMessages({ currentUser, selectedUser }) {
 
     const [messages, setMessages] = useState([]);
+    const socketRef = useRef();
+
+    useEffect(() => {
+        socketRef.current = io('http://localhost:3000', {
+          query: { userId: currentUser.user.id },
+        });
+    
+        // Listen for new messages
+        socketRef.current.on("newMessage", (message) => {
+          if (
+            (message.senderId === selectedUser.id && message.receiverId === currentUser.user.id) ||
+            (message.senderId === currentUser.user.id && message.receiverId === selectedUser.id)
+          ) {
+            setMessages((prevMessages) => [...prevMessages, message]);
+          }
+        });
+    
+        // Clean up on unmount
+        return () => {
+          socketRef.current.disconnect();
+        };
+      }, [currentUser.user.id, selectedUser.id]);
 
     useEffect(() => {
         fetch(`http://localhost:3000/user/${currentUser.user.id}/message/${selectedUser.id}`, {

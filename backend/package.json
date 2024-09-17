@@ -18,9 +18,11 @@
     "express": "^4.21.0",
     "express-session": "^1.18.0",
     "expresss": "^0.0.0",
+    "http": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
-    "prisma": "^5.19.1"
+    "prisma": "^5.19.1",
+    "socket.io": "^4.7.5"
   }
 }

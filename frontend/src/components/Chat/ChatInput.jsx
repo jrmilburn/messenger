@@ -21,6 +21,7 @@ export default function ChatInput({ currentUser, selectedUser }) {
         .then(response => response.json())
         .then(data => {
             console.log(data);
+            setMessage('');
         })
         .catch(error => console.error('Error:', error));
     }

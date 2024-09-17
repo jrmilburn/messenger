@@ -4,7 +4,7 @@ async function getMessages(req, res) {
     try {
         const messages = await prisma.message.findMany({
             orderBy: {
-                createdAt: 'desc'
+                createdAt: 'asc'
             },
             where: {
                 OR: [
@@ -68,6 +68,8 @@ async function createMessage(req, res) {
             }
         });
 
+        req.io.emit("newMessage", message);
+
         res.json(message);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -88,6 +90,8 @@ async function editMessage(req, res) {
             }
         });
 
+        req.io.emit("editMessage", message);
+
         res.json(message);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -103,6 +107,8 @@ async function deleteMessage(req, res) {
                 id: id
             }
         });
+
+        req.io.emit("deleteMessage", id);
 
         res.json({ message: "Message deleted" });
     } catch (error) {
