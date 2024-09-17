@@ -34,3 +34,7 @@
   .userItem:hover {
     background-color: #e9ecef;
   }
+
+  p {
+    margin: 1rem;
+  }

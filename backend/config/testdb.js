@@ -2,11 +2,16 @@ const { prisma } = require('./passport');
 
 async function main() {
 
-    const messages = await prisma.message.deleteMany();
-    const user = await prisma.user.deleteMany();
+    const user = await prisma.user.findMany({
+        where: {
+            username: 'Jrmilburn'
+        },
+        select: {
+            friends: true
+        }
+    });
 
-    console.log(messages);
-    console.log(user);
+    console.log(user.friends);
 
 }
 

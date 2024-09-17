@@ -11,6 +11,7 @@ const { Server } = require('socket.io');
 const userRouter = require("./routes/userRouter");
 const authenticationRouter = require("./routes/authenticationRouter");
 const messageRouter = require('./routes/messageRouter');
+const friendRouter = require('./routes/friendRouter');
 
 
 const app = express();
@@ -29,6 +30,7 @@ app.use(cors());
 app.use(passport.initialize());
 
 app.use("/user", passport.authenticate('jwt', { session: false }), userRouter);
+app.use("/friend", passport.authenticate('jwt', { session: false }), friendRouter);
 app.use("/", authenticationRouter);
 app.use('/user/:id/message', passport.authenticate('jwt', { session: false }), (req, res, next) => {
   req.io = io;

@@ -18,14 +18,18 @@
     position: relative;
 }
 
-.logout {
+.buttons button {
     background: #f8f9fa;
-    position: absolute;
     border: 1px solid #dee2e6;
     border-radius: 0;
     font-size: 1.2rem;
     cursor: pointer;
     width: 80%;
     bottom: 10%;
+}
 
+.buttons {
+    position: absolute;
+    bottom: 10%;
+    width: 80%;
 }

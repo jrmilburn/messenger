@@ -1,12 +1,31 @@
 const { prisma, generateToken } = require("../config/passport");
 const bcrypt = require("bcryptjs");
 
-async function getUsers(req, res) {
+async function getNotFriends(req, res) {
     try {
+        const currentUserId = req.user.id;
+
+        // Find all friends of the current user
+        const friends = await prisma.user.findMany({
+            where: {
+                OR: [
+                    { friends: { some: { id: currentUserId } } },
+                    { friendOf: { some: { id: currentUserId } } }
+                ]
+            },
+            select: {
+                id: true
+            }
+        });
+
+        // Extract friend IDs
+        const friendIds = friends.map(friend => friend.id);
+
+        // Find all users who are not friends with the current user
         const users = await prisma.user.findMany({
             where: {
-                NOT: {
-                    id: req.user.id
+                id: {
+                    notIn: friendIds.concat(currentUserId) // Exclude friends and the current user
                 }
             }
         });
@@ -144,14 +163,20 @@ async function deleteUser(req, res) {
 
 async function createFriendship(req, res) {
     try {
-        await prisma.user.update({
+        const friend = await prisma.user.findUnique({
             where: {
                 id: req.params.id
+            }
+        })
+
+        await prisma.user.update({
+            where: {
+                id: req.user.id
             },
             data: {
                 friends: {
                     connect: {
-                        id: req.body.friendId
+                        id: friend.id
                     }
                 }
             }
@@ -159,16 +184,20 @@ async function createFriendship(req, res) {
 
         await prisma.user.update({
             where: {
-                id: req.body.friendId
+                id: friend.id
             },
             data: {
-                friends: {
+                friendOf: {
                     connect: {
-                        id: req.params.id
+                        id: req.user.id
                     }
                 }
             }
         });
+
+        res.json(friend);
+
+
         
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -179,19 +208,21 @@ async function getFriends(req, res) {
     try {
         const friends = await prisma.user.findUnique({
             where: {
-                id: req.params.id
+                id: req.user.id
             },
             select: {
                 friends: true
             }
         });
+
+        res.json(friends || []);
     } catch(error) {
         res.status(500).json({ error: error.message });
     }
 }
 
 module.exports = {
-    getUsers,
+    getNotFriends,
     getUser,
     createUser,
     editUser,

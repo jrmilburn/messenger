@@ -7,7 +7,7 @@ export default function Users({ onUserClick, currentUser }) {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:3000/user', {
+        fetch('http://localhost:3000/friend', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -24,17 +24,21 @@ export default function Users({ onUserClick, currentUser }) {
     return (
         <div className={styles.container}>
             <h1 className={styles.title}>Users</h1>
-            <ul className={styles.userList}>
-                {users.map(user => (
-                    <li 
-                        key={user.id} 
-                        className={styles.userItem}
-                        onClick={() => onUserClick(user)}
-                    >
-                        {user.username}
-                    </li>
-                ))}
-            </ul>
+            {users && users.length > 0 ? (
+                <ul className={styles.userList}>
+                    {users.map(user => (
+                        <li 
+                            key={user.id} 
+                            className={styles.userItem}
+                            onClick={() => onUserClick(user)}
+                        >
+                            {user.username}
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p>No users available. Add a friend to begin chatting!</p>
+            )}
         </div>
     );
 }
