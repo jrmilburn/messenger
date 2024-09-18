@@ -1,6 +1,7 @@
 import { AuthContext } from "../context/AuthContext"
 import { useContext, useState } from "react"
 import styles from './ChatPage.module.css';
+import { NavLink } from "react-router-dom";
 
 import Users from "../components/Users/Users";
 import ChatMessages from "../components/Chat/ChatMessages";
@@ -36,6 +37,7 @@ export default function ChatPage() {
                 <div className={styles["buttons"]}>
                     <button onClick={handleOpenDialog}>Add Friends</button>
                     <button onClick={handleLogout}>Logout</button>
+                    <NavLink to="/profile"><button>Profile</button></NavLink>
                 </div>
             </div>
             <div className={styles["chat"]}>

@@ -20,11 +20,7 @@ async function getNotFriends(req, res) {
         });
 
         const friendIds = friendships.map((friendship) => {
-            if ( friendship.fromUserId === currentUserId) {
-                return friendship.toUserId;
-            } else {
-                return friendship.fromUserId;
-            }
+            return friendship.toUserId
         });
 
         const excludeIds = friendIds.concat(currentUserId);
@@ -130,19 +126,17 @@ async function login(req, res) {
 async function editUser(req, res) {
     try {
         const { id } = req.params;
-        const { email, password, username, bio, pfp, status } = req.body;
+        const { username, bio } = req.body;
 
         const user = await prisma.user.update({
             where: {
                 id: id
             },
             data: {
-                email: email,
-                password: password,
+
                 username: username,
                 bio: bio,
-                pfp: pfp,
-                status: status
+
             }
         });
 

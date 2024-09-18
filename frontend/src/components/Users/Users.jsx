@@ -33,6 +33,9 @@ export default function Users({ onUserClick, currentUser }) {
                             onClick={() => onUserClick(user)}
                         >
                             {user.username}
+                        <div className={styles["bio"]}>
+                            {user.bio}
+                        </div>
                         </li>
                     ))}
                 </ul>

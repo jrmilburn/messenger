@@ -7,16 +7,9 @@ async function main() {
             where: {
                 username: 'Jrmilburn'
             },
-            include: {
-                friendshipsSent: {
-                    include: {
-                        toUser: true
-                    }
-                },
-            },
         })
 
-        console.log(userFriends[0].friendshipsSent[0].toUser);
+        console.log(userFriends);
 
 
 }
