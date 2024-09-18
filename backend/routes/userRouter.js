@@ -10,6 +10,4 @@ userRouter.post('/', userController.createUser);
 userRouter.put('/:id', userController.editUser);
 userRouter.delete('/:id', userController.deleteUser);
 
-userRouter.post('/:id/friend', userController.createFriendship);
-
 module.exports = userRouter;

@@ -23,11 +23,11 @@ model User {
   status    Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
-  // Define many-to-many relationship for friends
-  friends       User[] @relation("UserFriends")
-  friendOf      User[] @relation("UserFriends")
-  
+
+  // Relations for friendships
+  friendshipsSent     UserFriends[] @relation("friendshipsSent")
+  friendshipsReceived UserFriends[] @relation("friendshipsReceived")
+
   sentMessages     Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")
 }
@@ -42,5 +42,16 @@ model Message {
 
   sender   User @relation("SentMessages", fields: [senderId], references: [id])
   receiver User @relation("ReceivedMessages", fields: [receiverId], references: [id])
+}
+
+model UserFriends {
+  fromUserId String
+  toUserId   String
+  createdAt  DateTime @default(now())
+
+  fromUser User @relation("friendshipsSent", fields: [fromUserId], references: [id])
+  toUser   User @relation("friendshipsReceived", fields: [toUserId], references: [id])
+
+  @@id([fromUserId, toUserId])
 }
 

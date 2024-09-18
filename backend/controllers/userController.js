@@ -3,32 +3,39 @@ const bcrypt = require("bcryptjs");
 
 async function getNotFriends(req, res) {
     try {
+
         const currentUserId = req.user.id;
 
-        // Find all friends of the current user
-        const friends = await prisma.user.findMany({
+        const friendships = await prisma.userFriends.findMany({
             where: {
                 OR: [
-                    { friends: { some: { id: currentUserId } } },
-                    { friendOf: { some: { id: currentUserId } } }
-                ]
+                    { fromUserId: currentUserId },
+                    { toUserId: currentUserId }
+                ],
             },
             select: {
-                id: true
+                fromUserId: true,
+                toUserId: true
             }
         });
 
-        // Extract friend IDs
-        const friendIds = friends.map(friend => friend.id);
+        const friendIds = friendships.map((friendship) => {
+            if ( friendship.fromUserId === currentUserId) {
+                return friendship.toUserId;
+            } else {
+                return friendship.fromUserId;
+            }
+        });
 
-        // Find all users who are not friends with the current user
+        const excludeIds = friendIds.concat(currentUserId);
+
         const users = await prisma.user.findMany({
             where: {
                 id: {
-                    notIn: friendIds.concat(currentUserId) // Exclude friends and the current user
+                    notIn: excludeIds
                 }
             }
-        });
+        })
 
         return res.json(users);
     } catch (error) {
@@ -163,41 +170,40 @@ async function deleteUser(req, res) {
 
 async function createFriendship(req, res) {
     try {
+        const friendId = req.params.id;
+        const userId = req.user.id;
+
         const friend = await prisma.user.findUnique({
             where: {
-                id: req.params.id
+                id: friendId
             }
-        })
+        });
+        
+        if (!friend) {
+            return res.status(404).json({ error: "Friend not found" });
+        }
 
-        await prisma.user.update({
-            where: {
-                id: req.user.id
-            },
-            data: {
-                friends: {
-                    connect: {
-                        id: friend.id
-                    }
+        const existingFriendship = await prisma.userFriends.findUnique({
+            where:{
+                fromUserId_toUserId: {
+                    fromUserId: userId,
+                    toUserId: friendId
                 }
             }
         });
 
-        await prisma.user.update({
-            where: {
-                id: friend.id
-            },
+        if (existingFriendship) {
+            return res.status(400).json({ error: "Friendship already exists" });
+        }
+
+        await prisma.userFriends.create({
             data: {
-                friendOf: {
-                    connect: {
-                        id: req.user.id
-                    }
-                }
-            }
+                fromUserId: userId,
+                toUserId: friendId
+            },
         });
 
-        res.json(friend);
-
-
+        res.json({ message: "Friendship created" });
         
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -206,16 +212,30 @@ async function createFriendship(req, res) {
 
 async function getFriends(req, res) {
     try {
-        const friends = await prisma.user.findUnique({
+
+        const userId = req.user.id;
+
+        const userFriends = await prisma.user.findUnique({
             where: {
-                id: req.user.id
+                id: userId
             },
-            select: {
-                friends: true
-            }
+            include: {
+                friendshipsSent: {
+                    include: {
+                        toUser: true
+                    }
+                },
+            },
+        })
+
+        const friends = []
+
+        userFriends.friendshipsSent.forEach((friendship) => {
+            friends.push(friendship.toUser);
         });
 
-        res.json(friends || []);
+        res.json(friends);
+
     } catch(error) {
         res.status(500).json({ error: error.message });
     }
